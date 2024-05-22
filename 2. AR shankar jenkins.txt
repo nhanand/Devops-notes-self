@@ -34,7 +34,7 @@ Setup Jenkins
 mobaxtrem
 -----------
 Download moba xterm
-ec2-user
+ec2-user     
 ip address - public
 pem file - key downloaded during Jenkins setup
 always root user
@@ -48,7 +48,7 @@ Follow instruction and install java and Jenkins  (use video link udemy)
 
 amazon-linux-extras install epel    // if it is not install , then we are unable to install Jenkins
 
-amazon-linux-extras install-java-openjdk11  // install java
+amazon-linux-extras install-java-penjdk11  // install java
 java -version
 -------------------------------------------------------------------------------------------------
 
@@ -81,15 +81,17 @@ User name admin
 ================================================================================================
 
 2.11
+agenda : first Jenkins job
+
 In build / execute shell
 echo "Hello World"
 -----------------------------------------------------
 uptime
 go to console type uptime – its shows it is running by how many minutes
 
+build now
 ================================================================================================
 
-build now
 2.12
 
 Install git 
@@ -98,14 +100,16 @@ Git –version
 -------------------------------------
 
 Github plugin
+--------------
 
-Manage Jenkins
-Mananage plugin 
-Available serach githuh check and install
+Manage Jenkins/Manage plugin/Available  search GitHub - check and install
+
 Configure Jenkins
+-----------------
+
 Manage Jenkins/system configuration/tools
 
-whereis git
+whereis git   // it shows where is git installed in our system
 =================================================================
 
 2.13
@@ -125,33 +129,42 @@ Go to home page and hit build now
 To check the build on console
 Cd /var/lib/jenkins/workspace     default location of build
 
+plz note: whenever Jenkins do any build activity it will do in workspace.
+
 ll
 
 =================================================================================================
 
 2.14 
 
-Integrating maven to Jenkins
+agenda : Integrating MAVEN to Jenkins
 
-Go to this directory in root cd /opt
+https://maven.apache.org/install.html   // use this website for reference , however all these steps are covered in this tutorial too.
+
+- MAVEN HAS POM.XML WHICH MANAGES ALL DEPENDENCIES HENCE NO HEADACHE OF CONFIGURATION.
+-------------------------------------------------------------------------------------------
+
 
 https://maven.apache.org/download.cgi
 Binary tar.gz archive copy link
+
 Go to terminal 
+
+Go to this directory in root cd /opt   // in this directory maven will be dowloaded
+
 wget https://dlcdn.apache.org/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz
 enter
-ll
+
+ll                                      
 tar.gz file 
 to extract it 
 tar -xvzf apache-maven-3.9.6-bin.tar.gz
 
-mv apache-maven-3.9.6 maven
-
+mv apache-maven-3.9.6 maven   // change the file name to maven
 
 cd maven
-cd bin
+cd bin                 // in bin directory actual command of maven
 ./mvn -v
-
 --------------------------------------------------------------
 
 to check maven anywhere setting the env variable
@@ -160,44 +173,58 @@ steps
 cd ~ to go back to root directory 
 ll -a // to check the hidden files
 
-vi .bash_profile // edit
+vi .bash_profile // edit               // for use only for root user bash_pofile is edited
+
 M2_HOME=/opt/maven   // where maven is stored
 M2=/opt/maven/bin    // binary directory
-M2_HOME=/usr/lib/jvm/java-11-openjdk-11.0.22.0.7-1.amzn2.0.1.x86_64   //find / -name java-11*
+M2_HOME=/usr/lib/jvm/java-11-openjdk-11.0.22.0.7-1.amzn2.0.1.x86_64   //find / -name java-11*(or jvm)
                                                                         /usr/lib/jvm/java-11-openjdk-11.0.22.0.7-1.amzn2.0.1.x86_64
+                                                                        - it is the path where jdk is available
 
 
-PATH=$PATH:$HOME/bin:$JAVA_HOME:$M2_HOME:$M2
+PATH=$PATH:$HOME/bin:$JAVA_HOME:$M2_HOME:$M2   // $ is given to take the path as defined above
  and save
 
+--------------------------------------------------------------------------------------------------
 
- source .bash_profile
-echo $PATH
+echo $PATH   // it will not loaded , we need to restart or run the below command
 
-mvn -v 
+ source .bash_profile  
+ 
+echo $PATH  // now it will give the path
 
-------------------------------
+mvn -v      // now it will execute from anywhere
+
+-----------------------------------------------------------------------------------------------
 
 integrating maven with Jenkins
 
 go to Jenkins
-manage
-plugin
-vailable 
-search maven and integrate
+manage Jenkins/manage plugin/ available search maven integration and integrate
 
 now we again config our Jenkins
-manage/tools
-
-add java path and add maven 
+manage/tools/add java path and add maven 
 
 
 ==================================================================
 
 2.15
 
-build a java project using Jenkins
+agenda : build a java project using Jenkins
 
+refer it for maven goals
+
+https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
+----------------------------------------------------------------------------------
+
+cd var/lib/Jenkins
+cd workspace   // in this dir our build is stored.
+
+cd firstmavenproject/   // our build
+ll
+cd webapp/
+ll
+cd target/  webapp.war  // imp :- webapp.war is the artificat i.e nothing but our build outcome
 ======================================================================================
 
 3.18
