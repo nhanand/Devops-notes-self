@@ -2,6 +2,7 @@ devops notes
 ============
 
 https://www.shiksha.com/online-courses/articles/what-makes-simplilearn-a-good-platform/
+jenkins is a java based application.
 
 A R Shankar
 
