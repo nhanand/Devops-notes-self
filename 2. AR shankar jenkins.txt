@@ -48,7 +48,7 @@ Follow instruction and install java and Jenkins  (use video link udemy)
 
 amazon-linux-extras install epel    // if it is not install , then we are unable to install Jenkins
 
-amazon-linux-extras install-java-penjdk11  // install java
+amazon-linux-extras install-java-openjdk11  // install java
 java -version
 -------------------------------------------------------------------------------------------------
 
