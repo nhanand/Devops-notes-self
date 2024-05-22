@@ -13,13 +13,13 @@ setup a tom cat server
 
 - go to root directory
 
-- amazon-linux-extras // to see all repositories
+- amazon-linux-extras // to see all remositories
 
 - amazon-linux-extras install java-openjdk11
 
 - check java -version
 
-- now install tomcat on cd /opt dir in root directory
+- now install topmcat on cd /opt dir in root directory
 
 ll
 
@@ -164,4 +164,3 @@ cron job is a job scheduler which triggers yours job at specific time.
 poll scm- used for auto deployment. if there are changes then build go happen else not.
 
 ===============================================================================================
-
