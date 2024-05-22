@@ -45,18 +45,32 @@ java and Jenkins setup
 Go to Jenkins download and deploy
 Choose redhat/cent os
 Follow instruction and install java and Jenkins  (use video link udemy)
+
+amazon-linux-extras install epel    // if it is not install , then we are unable to install Jenkins
+
+amazon-linux-extras install-java-penjdk11  // install java
 java -version
+-------------------------------------------------------------------------------------------------
 
 yum install Jenkins
-copy public ip adderss and paste it in url along with port no 3.82.44.49:8080
+
 
 in mobaxtterm 
 sudo su -
 service jenkins status/start/stop  //to start the Jenkins server 
 
+----------------------------------------------------------------------------------------
+
+
+copy public ip adderss and paste it in url along with port no 3.82.44.49:8080
+
+-------------------------------------------------------------------------------------
+
+
 retrieve password on Jenkins during first time login 
 -------------------------------------------------------
 
+service jenkins start
 /var/lib/jenkins/secrets/initialAdminPassword   //Jenkins default password
 Go to terminal
 Cat /var/lib/jenkins/secrets/initialAdminPassword
