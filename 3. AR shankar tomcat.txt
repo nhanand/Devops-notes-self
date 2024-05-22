@@ -1,34 +1,54 @@
+
+var/lib/Jenkins/workspace      // file after build -articrafts
+
+/opt                           // we can do any download here like wget  wget https://dlcdn.apache.org/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-                 bin.tar.gz
+
+root                           // other installation in root directory 
+
+/etc            default location for install field except /opt one. e.g. java, Jenkins, git etc
+
+==========================================================================================
+
 3.18
 
-setup a tom cat server
+agenda : setup a tom cat server
 
 - deploy our code on tomcat server
 ---------------------------------------
 
-- go to aws console and create and ec2 instance.
+1. go to aws console and create and ec2 instance.
 
-- copy the public ip address and launch it into browser
+2. copy the public ip address and launch it into browser
 
-- login into tomcat account with ip address as like Jenkins
+3. login into tomcat account with ip address as like Jenkins
 
-- go to root directory
+4. go to root directory
 
-- amazon-linux-extras // to see all remositories
+- amazon-linux-extras // to see all repositories
 
 - amazon-linux-extras install java-openjdk11
 
 - check java -version
+-------------------------------------------------------------------------------------------------------------------
 
-- now install topmcat on cd /opt dir in root directory
+5. now install tomcat on cd /opt dir in root directory because it is a tar.gz file
+
+a. link // https://tomcat.apache.org/download-90.cgi
+   from here copy link (tar.gz) https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.89/bin/apache-tomcat-9.0.89.tar.gz  
+
+cmd : wget  https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.89/bin/apache-tomcat-9.0.89.tar.gz  
 
 ll
 
 extract the file 
 
-tar -xvzf apache-tomcat-9.0.89.tar.gz
-ll
-mv apache-tomcat-9.0.89 tomcat
+b. tar -xvzf apache-tomcat-9.0.89.tar.gz
 
+ll
+
+c. mv apache-tomcat-9.0.89 tomcat
+
+d.
 - cd tomcat
 - cd bin
  in bin directory we can start our tomcat server
@@ -39,15 +59,16 @@ note in bin dir use ./startup.sh  to start the tomcat server
 
 - now go to browser and copy tomcat public id 54.226.182.102:8080 and start the server.
 
----------------------------------------------------
+-----------------------------------------------------------------------------------------
 
-now we have to login to tomcat server to web ui
+6. now we have to login to tomcat server to web ui
 
-- use manager app 
+-we will use manager app for this
 
 cd ../..
 
 - go to tomcat dir 
+  command : cd tomcat
 
 find / -name context.xml
 
@@ -58,26 +79,30 @@ find / -name context.xml
 
 and update what is available on webapps (host-manager and manager)
 
-go to vi editor 
+- go to vi editor in the below directories 
 
 /opt/tomcat/webapps/examples/META-INF/context.xml
 /opt/tomcat/webapps/manager/META-INF/context.xml
- AND 
 
-COMMENT THE IP ADRESSS
+AND 
 
-now 
+COMMENT THE Value that is allowed within the system.
+
+once these update start the tomcat services
+
+now we have to start the tomcat services
 
 - go to bin dir and stop the tomcat server by ./shutdown.sh
 
+- go to bin dir and start the tomcat server by ./startup.sh
 ---------------------------------------------------------------------
-
+7.
 start the server 
-./ startup.sh
+bin -> ./ startup.sh
 
 go to manager app it will ask for creds
 
-- for the tomcat-user.xml req which is in tomcat/conf dir
+- for the tomcat-user.xml req which is in tomcat/conf dir       //cd .. tomcat dir // ll conf dir // cd conf/ 
 
 - go to tomcat/conf dir
 
@@ -98,6 +123,7 @@ and paste thesse
 :wq
 
 --------------------------------------------------------------------
+8. 
 
 ln -s /opt/tomcat/bin/startup.sh /usr/local/bin/tomcatup
 echo $PATH   // to check the path
@@ -118,9 +144,9 @@ and login  using either admin or tomcat
 
 <user username="admin" password="admin" roles="manager-gui, manager-script, manager-jmx, manager-status"/>
  <user username="deployer" password="deployer" roles="manager-script"/>
- <user username="tomcat" password="s3cret" roles="manager-gui"/>
+ <user username="tomcat" password="s3cret" roles="manager-gui"/>                      //use this
 
------------------------------------------------------------------------
+==================================================================================================================
 
 3.19 integrating tomcat with Jenkins
 
@@ -129,25 +155,27 @@ steps
 2. configure Jenkins
 
 -------------------------------------
-
+1.
 - login to Jenkins
 
-password change Jenkins
+change Jenkins password in admin(user)
 
 - install deploy to container plugins
 
    manage Jenkins/plugins/available
 
 ---------------------------------------
-
+2.
 now need to configure tomcat with creds 
 
 - go to manage Jenkins
 - credentials/system/global credentials/add credentials
 
 use deployer plugin creds // tom cat creds admin/deployer/tomcat
+-see video for ref.
 
 -----------------------------------------------------
+3.
 
 go back to dashboard
 
@@ -157,10 +185,30 @@ build_and_deploy_job
 
 under maven project
 
+4.
+after that hit build now
 ============================================
+3.20
 
-cron job is a job scheduler which triggers yours job at specific time.
+-clone the repo and make some changes and push that code on GitHub.
+-go to Jenkins and hit build now. 
+- new changes will deployed on tomcat server.
 
-poll scm- used for auto deployment. if there are changes then build go happen else not.
+========================================================================
+
+3.21 
+
+automatic build triggered using poll scm
+
+cron job is a job scheduler which triggers yours job at specific time.  // used when build periodically is used.
+
+poll scm- used for auto deployment. it will go and check build is triggered or not. if build triggered it will update else not.
+
+diff b/w pole and cron job is that
+- in cron job build is triggered irrespective of build is made or not.
+- in pole scm , it triggers only when build occurs else not.
+
+schedule of cron job
+- minute,hour,day,dom,dow    // *****
 
 ===============================================================================================
