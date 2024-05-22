@@ -1,0 +1,10 @@
+service jenkins status/start/stop
+
+tomcatup/tomcatdown
+
+sudo su -
+
+====================================
+
+
+

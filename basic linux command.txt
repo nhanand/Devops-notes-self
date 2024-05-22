@@ -1,0 +1,405 @@
+
+directories in Linux
+
+
+=============================================
+uname
+uname -r what type of Linux
+uname -a
+===========================================
+
+refer website 
+---------------
+
+https://www.youtube.com/watch?v=rFwdniyo0CM
+
+30 important commands
+
+1. mkdir
+
+- create new directory with given name
+ mkdir LINUX_COMMANDS
+
+ls        //
+LINUX_COMMANDS
+=============================================
+
+2. ls or ll
+
+list the content of directory
+
+ls        //
+LINUX_COMMANDS
+=============================================
+
+3.0 cd
+- change to directory
+ cd LINUX_COMMANDS/
+==============================================
+
+4.0 touch 
+
+- to create empty files
+ touch file1.txt
+=============================================
+
+5.0 cat 
+
+- 3 uses
+ 
+1. to create a file and enter the content into that particular file.
+2. to display the content 
+3. merge 2 files and copy the content into another 2 file.
+
+1. cat>file2.txt
+
+- create a new file and writes the content and ctrl+D to save a content into the file.
+
+Enter the data 
+hello freinds!
+ctrl d to skip out of it
+
+---------------------------------
+
+ cat>file3.txt
+welcome to linux/unix xommands
+ctrl+d
+
+2. cat 
+- display the content of file
+
+cat file2.txt
+o/p hello freinds!
+
+3.cat file2.txt file3.txt > file4.txt
+
+- creates new files and content of both the files will be copied to a new file.
+- content of  file2.txt and file3.txt is copied into file4.txt.
+
+===================================================================================
+
+5  ls *.rb
+- list all the  files with given extensions only.
+
+e.g
+ ls *.rb
+file_new.rb
+
+=======================================================
+
+6.0 pwd
+- current working directory
+
+anand@LAPTOP-UQFQLRBC:~/LINUX_COMMANDS$ pwd
+/home/anand/LINUX_COMMANDS
+
+======================================================
+
+7.0 cp 
+- copy a file or directory
+
+ cp file3.txt file_new.rb
+
+cat file_new.rb
+welcome to linux/unix xommands
+
+======================================================
+
+8 mv
+
+- move a file or directory
+
+eg
+anand@LAPTOP-UQFQLRBC:~/LINUX_COMMANDS$ ls
+c.txt  file1.txt  file2.txt  file3.txt  file4.txt  file_new.rb  new_directory
+
+commad - mv c.txt /home/anand/LINUX_COMMANDS/new_directory
+
+cd new_directory/
+anand@LAPTOP-UQFQLRBC:~/LINUX_COMMANDS/new_directory$ ls
+c.txt
+==============================================================================
+9  vi
+
+- to write some text or program in a file.
+
+steps
+
+ls
+f1.txt
+
+vi  f1.txt
+
+insert i to write in vi text editor
+
+line1
+line2
+
+
+press escape
+:wq 
+
+to move out of file
+
+to see the text
+----------------
+
+cat f1.txt
+
+==============================================================================
+
+10. head
+
+- display first 10 lines of a file.
+- head f1.txt
+
+eg  head f1.txt
+Line1
+Line2
+Line3
+Line4
+Line5
+Line6
+Line7
+Line8
+Line9
+Line10
+
+==================================================================
+
+11 tail
+
+- gives last 10 lines of a file.
+
+eg
+tail f1.txt
+Line26
+Line27
+Line28
+Line29
+Line30
+Line31
+Line32
+Line33
+line 34
+line 35
+===================================================================
+
+12 tac
+- display file content line in reverse order
+
+ tac f1.txt
+
+=====================================
+
+13 more
+
+- similar to cat and here we can use large content by enter, spacebar.
+
+========================================
+
+14 id 
+
+- display id of a user
+
+==============================
+
+15 clear 
+
+- used to clear the screen
+
+================================
+
+16 grep 
+
+- it is filter to search given pattern in a file content.
+
+ grep we file3.txt
+welcome to linux/unix xommands
+
+we is highlighted in red
+
+====================================================================
+
+17  diff 
+
+- difference b/w 2 files
+
+anand@LAPTOP-UQFQLRBC:~/LINUX_COMMANDS$ cat file3.txt
+welcome to linux/unix xommands
+
+anand@LAPTOP-UQFQLRBC:~/LINUX_COMMANDS$ cat file4.txt
+hello freinds!
+
+welcome to linux/unix xommands
+anand@LAPTOP-UQFQLRBC:~/LINUX_COMMANDS$ diff  file3.txt  file4.txt
+0a1
+> hello freinds!
+
+====================================================================
+
+18 ping 
+
+- check the n/w connectivity of a server
+
+ping google.com
+
+ctrl z // to come out of it
+
+===========================================
+
+19 history 
+
+- review all the commands you have entered
+
+===========================================
+
+20 hostname
+
+hostname
+LAPTOP-UQFQLRBC
+
+===================================
+
+21 hostname -i gives ip address
+
+===================================
+ 
+22 chmod
+
+- used to enter the user/group permission to access file 
+
+============================================
+
+23  nl display the line no b4 it.
+
+nl f1.txt
+
+============================================
+
+24 wc 
+
+- gives no of lines, no of words and no of character available in the content.
+
+cat file2.txt
+hello freinds!
+
+ wc file2.txt
+ 1  2 15 file2.txt
+
+=================================================
+
+25 uniq
+
+uniq file3.txt
+
+- removes duplicates of file content
+- exception - it can remove only continuos duplicates
+
+==========================================
+
+
+26 rmdir 
+
+- remove the specified emty directory
+
+rmdir anand
+===========================================
+
+27 rm 
+
+- remove the file
+
+rm f3.txt
+
+==============================
+
+28 init 6 - command is traditionally used to trigger a system reboot
+=======================================================================
+========================================================================
+
+https://www.youtube.com/watch?v=BGjTboXjH28
+
+29
+
+- apt-get update && apt-get upgrade  
+====================================
+
+30 man
+
+ man ls   // to open manual of ls
+========================================
+
+30 
+
+permissions 
+------------
+
+to check on what file what permission is given
+
+ls -l test            // ls -l for list test.txt
+-rw-r--r--
+
+permission can be divided into 3 types
+
+admin  rw first three for admmn 
+group  r  next 2 for group
+public r  next 2 for public
+
+x is used for executable
+
+public do not have exectuble permission so we can change the permission 
+
+1 executable x
+2 write      w
+4 read       r 
+
+1+2+4 =7
+
+in general admin have all the permission rwx    so 4+2+1 = 7 so to admin we will give 7 as permission
+           group                         rw        4+2 =6 
+           public                        r         4
+
+chmod 764 test     (7 for admin 6 for gropu 4 for read)
+so permission for admin gropu and public is set
+
+ex: 
+ ls -l test.txt
+-rwxrw-r-- 1 anand anand 0 May 10 13:46 test.txt            // in this way we can set the permission
+
+=========================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,502 @@
+basic of docker 
+================
+
+sudo su - dockeradmin               //login as docker admin
+
+
+========================
+to change the hostname
+
+vi hostname
+change name and save
+init 6 to rebbot 
+=======================
+
+4.22
+
+step 1
+
+launch ec2 instance
+
+-------------------------
+
+step 2
+
+connect to the system(terminal)
+
+--------------------------
+
+step 3
+
+become root and install docker
+
+sudo su - 
+
+yum install docker -y
+
+----------------------------
+
+step 4
+
+service docker status/start/stop
+
+----------------------------------
+
+step 5
+
+docker images -- how many are there on server 
+
+command : docker images
+
+docker container  -----
+
+docker ps    // tell how many containers are running
+docker ps -a // how many containers you are having
+
+docker --help
+===============================================================
+
+4.23 
+
+agenda : how to create a container
+
+step 1
+
+---------------------------------------------------------------------
+-to create a container we need docker images
+-can be download from docker hub
+
+docker images
+- can be either pulled from docker hub.  using command docker pull 
+- 0r can be build through docker file.
+with docker images we can create docker container.
+-----------------------------------------------------------------------
+
+go to https://hub.docker.com/
+search tomcat 
+
+
+- copy the command (docker pull tomcat) and run on terminal // note service docker status/start/stop must be started b4 pull
+
+to check images 
+- docker images
+now images created 
+-------------------------------------------------------------------------
+
+step 2 
+
+to create the container for image
+ 
+ docker run -d --name tomcat-container -p 8081:8080 tomcat
+ 9609a7734b2f928c7bdb7cf294d4721d5f5589d06f2699339d54fb53c305e9b6   gives id of the container
+
+ explanation
+
+- -d is detached mode.
+- tomcat container is container name 
+- dockerost runs on port no 8080 internally. but we are exposing it to external network on port no 8081.
+- tomcat is image name which taken from docker images for which we are creating the container. 
+
+
+docker ps 
+
+-----------------------------------------------------------------------------------------------------------
+
+step 3
+ 
+to access it on ui
+
+- copy the public ip of docker host along with external port o and paste it in browser
+
+- 52.73.5.178:8081   like this
+
+- not able to open the link because we have-not open this external port on security group of docker host
+
+- to open go to instances/docker-host/security/add external port 8081-9000  // or define it while launching new instances
+
+=======================================================================================================================
+
+4.24
+
+solving error of 4.23
+
+login in to docker container
+
+container is 
+
+docker ps
+CONTAINER ID   IMAGE     COMMAND             CREATED          STATUS          PORTS                                       NAMES
+c451b7a8ce9c   tomcat    "catalina.sh run"   11 minutes ago   Up 11 minutes   0.0.0.0:8081->8080/tcp, :::8081->8080/tcp   tomcat-container
+
+command : docker exec -it tomcat-container /bin/bash
+
+[root@ip-172-31-20-76 /]# docker exec -it tomcat-container /bin/bash   //from docker host
+root@c451b7a8ce9c:/usr/local/tomcat#                                   // jump into docker container with that command
+
+
+
+copy the content of webapps.dist to webapps
+- cd webapps.dist 
+- cp -R * ../webapps                            // copy recursively the current directory to one step above in webapps directory
+
+-----------------------------------------------------------------------------------------------------
+
+docker stop tomcat-container
+------------------------------
+
+docker run -d --name tomcat2 -p 8082:8080 tomcat:latest
+-----------------------------------------------------------
+
+
+the problem with is this solution is temporary. suppose we delete this container and create a new 
+container with same image and when we try to launch it on web it will show the same error. so to 
+overcome this we will write a docker file.
+
+=========================================================================================================
+
+ 
+
+4.25 
+
+skip this no need - its another method is shown in 4.26
+
+===================================
+
+4.26
+
+vi Dockerfile
+
+FROM tomcat:latest
+RUN cp -R /usr/local/tomcat/webapps.dist/* /usr/local/tomcat/webapps
+
+:wq
+
+
+docker build -t demotomcat .       // image demotomcat will be created
+docker run -d --name demotomcat-container -p 8085:8081 demotomcat    //creating demotomcat-container  for demotomcat image 
+
+
+=============================================================================================================================
+
+4.27
+
+ integrate Docker with Jenkins
+------------------------------
+
+steps
+------
+
+1. Create a dockeradmin User
+2. install "publish over ssh" plugin
+3. add Dockerhost to Jenkins configure system
+-----------------------------------------------
+
+
+1. 
+- cat /etc/passwd                                       // to see how many user
+---------------------------------------------------------------------------------
+
+2.
+- cat /etc/group                                       // to see the group
+--------------------------------------------------------------------------------
+
+3. add user as admin
+
+command - useradd dockeradmin
+command - passwd dockeradmin
+set new password - Docker123
+--------------------------------------------------------------------------------------------
+
+4.  id dockeradmin
+uid=1001(dockeradmin) gid=1001(dockeradmin) groups=1001(dockeradmin)
+
+now we have to add this user to docker group
+
+command : usermod -aG docker dockeradmin
+----------------------------------------------------------------------------------------------
+
+5. 
+ec2 - instance doesnot allow password based authentication. we should explicitly enable it. 
+
+steps
+
+vi /etc/ssh/sshd_config
+
+- search /password 
+
+-#PasswordAuthentication yes        // uncomment it , 
+#PermitEmptyPasswords no
+PasswordAuthentication no           //comment it 
+
+:wq
+
+now we can login with password
+
+
+service sshd reload     // dont start and stop else you will loose the connection
+----------------------------------------------------------------------------------
+
+6. open new ssh with username as dockeradmin
+password Docker123
+----------------------------------------------
+
+7.   integrating dockerhost with Jenkins
+--------------------------------------------
+
+
+step:
+ 
+a. 
+login to Jenkins
+
+b.
+manage Jenkins/manage plugins/ available/ pubish over ssh install
+
+c.
+  configure our docker host in Jenkins
+
+- manage Jenkins/system/
+- fill the steps and save
+
+=============================================================================================
+
+4.28
+
+agenda : Jenkins job to build and deploy on dockerhost
+
+steps:
+
+go to new items and configure and run the job. a file will be created webapp.war in dockeradmin home dir if successful build.
+
+webapp.war file created is owned by dockeradmin. now this webap.war file we want to copy it on docker container. we can copy it manually. but if we copy it manually and there are so many builds how you make sure that your application is successfully deployed everytime. so we need to update our docker file to take this war file while creating a new container. that is how we con deploy our application with tomcat.
+
+
+========================================================================================================
+
+4.29 
+
+agenda : update tomcat dockerfile to automatic deployment process
+
+IN PREVIOS LECTURE WE HAVE CREATED A JENKINSFILE TO BULD THE CODE AND DEPLOY THE THE ARTIFACTS INTO DOCKER HOST.
+NOW ITS TIME CRATE A DOCKER IMAGE ALONG WITH OUR ARTIFICATS MEANS WARFILE SO THAT WHENEVER WE LAUNCH A NEW CONTAINER, IT WILL COME WITH AN APLLICATION. FOR THAT ONE, WE NEED TO COPY THIS ARTIFACTS WHERE WE HAVE OUR DOCKERFILE. WE HAVE CREATED OUR DOCKERFILE UNDER ROOT DIRECTORY. INSTEAD OF THAT WE CAN MANINTAIN A SEPERATE DIRECTORY TO KEEP OUR DOCKERFILE AND THE ARTIFACTS, SO THAT IN FUTURE WE CAN USE OUR LOCATION TO CREATE OUR DOCKER IMAGES.
+
+STEPS 
+
+1 goo to root directory and create a dir
+cmd : cd /opt
+      mkdir docker
+--------------------------------------------------
+
+2. since this dir is owned by root, change the ownership to dockeradmin user
+
+cmd chown dockeradmin:dockeradmin docker
+
+--------------------------------------------------------------
+
+3. ls -ld // to see permissions weather changes or not root-> dockeradmin
+-------------------------------------------------------------------------------
+
+4. we have created a Dockerfile under root dir. move that file to /opt/docker
+
+cmd : mv Dockerfile /opt/docker/     //go to root dir and run this command
+
+--------------------------------------------------------------------------------
+
+5. no go to docker dir again 
+cd /opt/docker
+ll -l 
+owned by root usr 
+
+change to dockeradmin
+
+chown dockeradmin:dockeradmin /opt/docker
+
+-------------------------------------------------------------------------------------------
+
+6. go to Jenkins job 
+and under remote dir add the path
+
+cmd : //opt//docker   //this will when new file created , it will added to this location
+-------------------------------------------------------------------------------------------
+
+7. rebuild , now this webapp.war file will save on /opt/docker location
+---------------------------------------------------------------------------
+
+8 on docker dir 
+
+edit vi Dockerfile
+
+FROM tomcat:latest
+RUN cp -R /usr/local/tomcat/webapps.dist/* /usr/local/tomcat/webapps
+COPY ./*.war /usr/local/tomcat/webapps
+:wq
+enter
+
+------------------------------------------------------------------------
+
+9. go to console in docker dir
+
+cat Dockerfile
+
+create an image 
+ 
+cmd : docker build -t tomcat:v1 .               // new image will be created
+
+again create a container out of it
+
+docker build -d --name tomcatv1 -p 8086:8080 tomcat:v1
+
+----------------------------------------------------------------------------------
+
+10. go to ui
+
+copy dockerfile ip and paste it in browser with portno 8086
+
+ip_address:8086
+ip_address:8086/webapps        // to see webapps
+
+now we are able to access our application through ddocker container
+
+=========================================================================================
+
+problem into above is that we are doing all the operation manually, which is not correct.
+so we need to do it automatically. for this we will do the following operations.
+
+4.30
+
+Agenda : automatic build and deploy on Docker container
+-------------------------------------------------------
+
+step1
+
+on Jenkins go to BuildAndDeployOnContainer jb
+configure /edit
+send build artificats over ssh/exec command
+
+// add docker build and docker run command
+
+cd /opt/docker
+docker build -t regapp:v1 .;
+docker run -d --name registerapp -p 8087:8080 regapp:v1
+
+appy and save
+
+-----------------------------------------------------------
+
+step2
+
+go to console  and clear all image and container
+
+docker stop container_id1 container_id2 container_id2   // stop all the running container
+
+- to delete all the container (stopped)
+
+cmd : docker container prune
+
+- to delete all the images (unused)
+
+cmd: docker imgage prune -a
+
+----------------------------------------------------------
+
+step 3
+
+go to Jenkins and hit build now
+
+-----------------------------------------
+
+
+now make some chanes in the code and push it on GitHub
+automatically build is done but job will fail. to overcome it run 
+
+docker build -t regapp:v1 .;
+docker run -d --name registerapp -p 8087:8080 regapp:v1
+
+these two command manually on console
+
+it gives error that continer name already exists and so on ..... 
+
+to overcome this we will see in next section.
+
+
+=========================================================================
+
+4.31
+
+Agenda : Jenkins job to automate CI/CD to deploy application on docker container
+--------------------------------------------------------------------------------
+
+on Jenkins go to BuildAndDeployOnContainer jb
+configure /edit
+send build artificats over ssh/exec command
+
+// add docker build and docker run command
+
+cd /opt/docker
+docker build -t regapp:v1 .;
+docker stop regapp;
+docker rm regapp;
+docker run -d --name registerapp -p 8087:8080 regapp:v1
+
+appy and save
+
+again hit build now
+----------------------------------------------------------------------------------
+
+
+in this way we can build and deploy job automatically. but if you see here Jenkins
+job looks ugly. so to overcome this we need separate deployment tools like ANSIBLE.
+====================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   
+
+
+
+
+
+
+
+
+
