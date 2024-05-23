@@ -1,13 +1,15 @@
 basic of docker 
 ================
 
+https://github.com/yankils/Simple-DevOps-Project
+
 sudo su - dockeradmin               //login as docker admin
 
 
 ========================
 to change the hostname
 
-vi hostname
+vi /etc/hostname
 change name and save
 init 6 to rebbot 
 =======================
@@ -44,6 +46,8 @@ service docker status/start/stop
 
 step 5
 
+to validate
+
 docker images -- how many are there on server 
 
 command : docker images
@@ -60,17 +64,18 @@ docker --help
 
 agenda : how to create a container
 
-step 1
 
 ---------------------------------------------------------------------
 -to create a container we need docker images
 -can be download from docker hub
 
-docker images
+docker images: get it in 2 ways
+
 - can be either pulled from docker hub.  using command docker pull 
 - 0r can be build through docker file.
 with docker images we can create docker container.
 -----------------------------------------------------------------------
+step 1
 
 go to https://hub.docker.com/
 search tomcat 
@@ -98,7 +103,7 @@ to create the container for image
 - tomcat is image name which taken from docker images for which we are creating the container. 
 
 
-docker ps 
+docker ps    // to see the container
 
 -----------------------------------------------------------------------------------------------------------
 
@@ -128,7 +133,7 @@ docker ps
 CONTAINER ID   IMAGE     COMMAND             CREATED          STATUS          PORTS                                       NAMES
 c451b7a8ce9c   tomcat    "catalina.sh run"   11 minutes ago   Up 11 minutes   0.0.0.0:8081->8080/tcp, :::8081->8080/tcp   tomcat-container
 
-command : docker exec -it tomcat-container /bin/bash
+command : docker exec -it tomcat-container /bin/bash       // to login into tomcat-container
 
 [root@ip-172-31-20-76 /]# docker exec -it tomcat-container /bin/bash   //from docker host
 root@c451b7a8ce9c:/usr/local/tomcat#                                   // jump into docker container with that command
@@ -139,43 +144,186 @@ copy the content of webapps.dist to webapps
 - cd webapps.dist 
 - cp -R * ../webapps                            // copy recursively the current directory to one step above in webapps directory
 
+
+GO ON UI AND TYPE THE IP_ADRESS ALONG WITH PORT NO. - U WILL NOW ABLE TO OPEN THE LINK AND SEE THE WEBPAGE
+
 -----------------------------------------------------------------------------------------------------
 
-docker stop tomcat-container
-------------------------------
-
-docker run -d --name tomcat2 -p 8082:8080 tomcat:latest
------------------------------------------------------------
-
-
-the problem with is this solution is temporary. suppose we delete this container and create a new 
+the problem with is this solution is temporary. suppose we delete this container OR create a new 
 container with same image and when we try to launch it on web it will show the same error. so to 
 overcome this we will write a docker file.
 
-=========================================================================================================
+for e.g
 
- 
+docker stop tomcat-container        // stopping the previous running container 
+-----------------------------
+
+docker run -d --name tomcat2 -p 8082:8080 tomcat:latest         // creating a new container having same image. (note - can change the image also)
+-----------------------------------------------------------
+
+go and open on ui with ip_address and port no 8082. it will give you the same error.
+
+=========================================================================================================
 
 4.25 
 
-skip this no need - its another method is shown in 4.26
+agenda : how to write a docker file for above issue.
 
-===================================
+FROM : to pull the base image.
+
+RUN  : to execute commands.  like installing packages , adding user etc
+
+CMD  :  to provide default for an executing container.
+
+ENTRYPOINT : to configure a container that will run as an executable.
+
+WORKDIR : to sets the container. ex switch in working directory
+
+COPY :  to copy a directory from your local machine to the docker container.
+
+ADD  :  to copy file/folder from your local machine to the docker container. (wget command)
+
+EXPOSE  : informs docker that container listens on specified ports at runtime. 
+          (e.g. expose it on port no 8081 ext.)
+
+ENV : to set environment variables.
+
+for more plz refer dockerfile references.
+-------------------------------------------------------------------------
+
+steps to install tomcat on centos
+
+1. pull centos from dockerhub                                FROM
+
+2. install java                                              RUN
+
+3. create /opt/tomcat directory                              RUN
+
+4. change workdir to /opt/tomcat directory                   WORKDIR
+
+5. download tomcat packages                                  ADD/RUN
+
+6. extract tar.gz file                                       RUN
+
+7. rename to tomcat directory                                RUN
+
+8. tells to docker to it runs on port no 8080                EXPOSE
+
+9. start tomcat services                                     CMD
+
+-------------------------------------------------------
+
+step 1
+
+CREATE A DOCKER FILE
+
+vi dockerfile
+
+enter
+
+i
+
+FROM centos
+RUN yum install java -y
+RUN mkdir /opt/tomcat/
+WORKDIR /opt/tomcat
+ADD https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.54/bin/apache-tomcat-9.0.54.tar.gz /opt/tomcat . // . represents current working dir i.e. /opt/tomcat
+RUN tar xvfz apache-tomcat-9.0.54.tar.gz
+RUN mv apache-tomcat-9.0.54/* /opt/tomcat   // * represents all the dir within tomcat
+EXPOSE 8080
+CMD ["/opt/tomcat/bin/catalina.sh", "run"]
+
+escape
+
+:wq
+
+----------------------------------------------
+
+step 2 
+
+to build an image out of it
+
+cmd : docker build -t mytomcat .
+
+----------------------------------------
+step 3
+
+docker images
+
+- you will see the newly image created
+
+----------------------------------------
+
+step 4
+
+next create a container for the above image
+
+cmd : docker run -d --name mytomcat-server -p 8083:8080 mytomcat
+
+docker ps -a    // to check the newly created container
+
+------------------------------------------------------------------
+
+step 5
+
+go on ui and check on port no 8083 ext
+
+===============================================================================================
 
 4.26
+
+agenda : create a customised Dockerfile for Tomcat
+---------------------------------------------------
+
+in the above we have seen how to create a dockerfile. but instead of doing all these
+you can directly pull your Tomcat image from dockerhub repository. 
+Similar way if you want to pull docker image to docker container we just need to change
+FROM centos:latest -----> FROM tomcat:latest that it we are going to pull the tomcat latest.
+but the problem with the default image we are not going to get the hompage of tomcat i.e 
+it is giving error like http status page not found.
+so to overcome this we need to pull tomcat in a dockerfile and we need to copy 
+webapp.dist directory content to webapps. this is what we are going to do.
+
+-------------------------------------------------------------------------------------------
+
+steps 1
+
+so first remove above create dockerfile
+
+cmd : rm Dockerfile
+
+-----------------------------------------------
+step 2
 
 vi Dockerfile
 
 FROM tomcat:latest
-RUN cp -R /usr/local/tomcat/webapps.dist/* /usr/local/tomcat/webapps
-
+RUN cp -R /usr/local/tomcat/webapps.dist/* /usr/local/tomcat/webapps       // /usr/local/tomcat comes from catlina home directory of 
+                                                                              tomcat image on dockerhub. 
+                                                                           // /* to all the contents in that dir
 :wq
+enter
+-------------------------------------------------------------------------------------------------------------
+step 3
 
+now we have to build the above dockerfile
 
-docker build -t demotomcat .       // image demotomcat will be created
+cmd : docker build -t demotomcat .       // image demotomcat will be created. also again plz note . represent the current location
+
+docker images // to validate
+--------------------------------------------------------------------------------------
+step 4
+
+to create container for the above image
+
 docker run -d --name demotomcat-container -p 8085:8081 demotomcat    //creating demotomcat-container  for demotomcat image 
 
+docker ps // to validate
+---------------------------------------------------------------------------------------
 
+step 5
+
+go on ui and enter ip_adress:8085
 =============================================================================================================================
 
 4.27
@@ -212,13 +360,17 @@ uid=1001(dockeradmin) gid=1001(dockeradmin) groups=1001(dockeradmin)
 
 now we have to add this user to docker group
 
-command : usermod -aG docker dockeradmin
+command : usermod -aG docker dockeradmin   // add a addition group docker for dockeradmin user
 ----------------------------------------------------------------------------------------------
 
 5. 
-ec2 - instance doesnot allow password based authentication. we should explicitly enable it. 
+go and login using user_id dockeradmin and password Docker123. you are not able to login.
 
-steps
+reason:
+ec2 - instance doesnot allow password based authentication. we should explicitly enable it. 
+---------------------------------------------------------------------------------------------
+
+steps for password based authentication
 
 vi /etc/ssh/sshd_config
 
@@ -233,12 +385,13 @@ PasswordAuthentication no           //comment it
 now we can login with password
 
 
-service sshd reload     // dont start and stop else you will loose the connection
+service sshd reload    // restart the services. note : dont start and stop else you will loose the connection
 ----------------------------------------------------------------------------------
 
 6. open new ssh with username as dockeradmin
 password Docker123
 ----------------------------------------------
+
 
 7.   integrating dockerhost with Jenkins
 --------------------------------------------
@@ -277,7 +430,7 @@ webapp.war file created is owned by dockeradmin. now this webap.war file we want
 
 agenda : update tomcat dockerfile to automatic deployment process
 
-IN PREVIOS LECTURE WE HAVE CREATED A JENKINSFILE TO BULD THE CODE AND DEPLOY THE THE ARTIFACTS INTO DOCKER HOST.
+IN PREVIOS LECTURE WE HAVE CREATED A JENKINSFILE TO BUILD THE CODE AND DEPLOY THE THE ARTIFACTS INTO DOCKER HOST.
 NOW ITS TIME CRATE A DOCKER IMAGE ALONG WITH OUR ARTIFICATS MEANS WARFILE SO THAT WHENEVER WE LAUNCH A NEW CONTAINER, IT WILL COME WITH AN APLLICATION. FOR THAT ONE, WE NEED TO COPY THIS ARTIFACTS WHERE WE HAVE OUR DOCKERFILE. WE HAVE CREATED OUR DOCKERFILE UNDER ROOT DIRECTORY. INSTEAD OF THAT WE CAN MANINTAIN A SEPERATE DIRECTORY TO KEEP OUR DOCKERFILE AND THE ARTIFACTS, SO THAT IN FUTURE WE CAN USE OUR LOCATION TO CREATE OUR DOCKER IMAGES.
 
 STEPS 
