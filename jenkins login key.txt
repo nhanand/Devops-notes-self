@@ -1,6 +1,0 @@
-username
-admin
-
-password
-39ce656567b94c96baef48037fce54b0
-new p - jenkins
