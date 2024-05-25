@@ -110,7 +110,7 @@ go to manager app it will ask for creds
   
 note to go end of the file shift g is used
 
-and paste thesse
+and paste these
 
  <role rolename="manager-gui"/>
  <role rolename="manager-script"/>
@@ -204,7 +204,7 @@ cron job is a job scheduler which triggers yours job at specific time.  // used 
 
 poll scm- used for auto deployment. it will go and check build is triggered or not. if build triggered it will update else not.
 
-diff b/w pole and cron job is that
+diff b/w pole scm and cron job is that
 - in cron job build is triggered irrespective of build is made or not.
 - in pole scm , it triggers only when build occurs else not.
 

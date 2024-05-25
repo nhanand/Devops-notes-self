@@ -21,7 +21,11 @@ setup all these environment on AWS
 
 
 
-A key pair consists of a public key that AWS stores and a private key file that you store. Together, they allow you two connect to your instances securely. For windows AMIs, the private key file is required to obtain the password used to login into your instance. For Linux AMIs, the private keys file allows you to securely SSH into your instance. Amazon EC2 supports ED25519 and RSA key pairs types.
+A key pair consists of a public key that AWS stores and a private key file that you store. 
+Together, they allow you two connect to your instances securely. For windows AMIs, the 
+private key file is required to obtain the password used to login into your instance. For 
+Linux AMIs, the private keys file allows you to securely SSH into your instance. Amazon 
+EC2 supports ED25519 and RSA key pairs types.
 
 ===============================================================================================================
 
@@ -46,9 +50,9 @@ Go to Jenkins download and deploy
 Choose redhat/cent os
 Follow instruction and install java and Jenkins  (use video link udemy)
 
-amazon-linux-extras install epel    // if it is not install , then we are unable to install Jenkins
+amazon-linux-extras install epel    //(extra packages for enterprise Linux) if it is not install , then we are unable to install Jenkins
 
-amazon-linux-extras install-java-penjdk11  // install java
+amazon-linux-extras install-java-openjdk11  // install java
 java -version
 -------------------------------------------------------------------------------------------------
 
@@ -135,6 +139,8 @@ ll
 
 =================================================================================================
 
+=================================================================================================
+
 2.14 
 
 agenda : Integrating MAVEN to Jenkins
@@ -150,7 +156,7 @@ Binary tar.gz archive copy link
 
 Go to terminal 
 
-Go to this directory in root cd /opt   // in this directory maven will be dowloaded
+Go to this directory in root cd /opt   // in this directory maven will be downloaded
 
 wget https://dlcdn.apache.org/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz
 enter
@@ -163,7 +169,7 @@ tar -xvzf apache-maven-3.9.6-bin.tar.gz
 mv apache-maven-3.9.6 maven   // change the file name to maven
 
 cd maven
-cd bin                 // in bin directory actual command of maven
+cd bin                 //  /opt/maven/bin - in bin directory actual command of maven
 ./mvn -v
 --------------------------------------------------------------
 
@@ -200,7 +206,7 @@ mvn -v      // now it will execute from anywhere
 integrating maven with Jenkins
 
 go to Jenkins
-manage Jenkins/manage plugin/ available search maven integration and integrate
+manage Jenkins/manage plugin/available search maven integration and integrate
 
 now we again config our Jenkins
 manage/tools/add java path and add maven 
@@ -212,9 +218,9 @@ manage/tools/add java path and add maven
 
 agenda : build a java project using Jenkins
 
-refer it for maven goals
+refer it for maven goals (like clean install etc)
 
-https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
+https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html    
 ----------------------------------------------------------------------------------
 
 cd var/lib/Jenkins
