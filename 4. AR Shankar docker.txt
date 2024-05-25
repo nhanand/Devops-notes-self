@@ -3,7 +3,7 @@ basic of docker
 
 https://github.com/yankils/Simple-DevOps-Project
 
-sudo su - dockeradmin               //login as docker admin
+cmd : sudo su - dockeradmin               //login as docker admin
 
 
 ========================
@@ -11,7 +11,7 @@ to change the hostname
 
 vi /etc/hostname
 change name and save
-init 6 to rebbot 
+init 6 to reboot 
 =======================
 
 4.22
@@ -67,12 +67,11 @@ agenda : how to create a container
 
 ---------------------------------------------------------------------
 -to create a container we need docker images
--can be download from docker hub
 
 docker images: get it in 2 ways
 
 - can be either pulled from docker hub.  using command docker pull 
-- 0r can be build through docker file.
+- or can be build through docker file.
 with docker images we can create docker container.
 -----------------------------------------------------------------------
 step 1
@@ -136,8 +135,8 @@ c451b7a8ce9c   tomcat    "catalina.sh run"   11 minutes ago   Up 11 minutes   0.
 command : docker exec -it tomcat-container /bin/bash       // to login into tomcat-container
 
 [root@ip-172-31-20-76 /]# docker exec -it tomcat-container /bin/bash   //from docker host
-root@c451b7a8ce9c:/usr/local/tomcat#                                   // jump into docker container with that command
-
+                                                                       // jump into docker container with that command
+root@c451b7a8ce9c:/usr/local/tomcat#                                   
 
 
 copy the content of webapps.dist to webapps
@@ -237,6 +236,7 @@ escape
 
 :wq
 
+
 ----------------------------------------------
 
 step 2 
@@ -299,8 +299,9 @@ vi Dockerfile
 
 FROM tomcat:latest
 RUN cp -R /usr/local/tomcat/webapps.dist/* /usr/local/tomcat/webapps       // /usr/local/tomcat comes from catlina home directory of 
-                                                                              tomcat image on dockerhub. 
-                                                                           // /* to all the contents in that dir
+                                                                           tomcat image on dockerhub. also /* represents to all the 
+                                                                           contents in that dir.
+                                                                           
 :wq
 enter
 -------------------------------------------------------------------------------------------------------------
@@ -421,7 +422,10 @@ steps:
 
 go to new items and configure and run the job. a file will be created webapp.war in dockeradmin home dir if successful build.
 
-webapp.war file created is owned by dockeradmin. now this webap.war file we want to copy it on docker container. we can copy it manually. but if we copy it manually and there are so many builds how you make sure that your application is successfully deployed everytime. so we need to update our docker file to take this war file while creating a new container. that is how we con deploy our application with tomcat.
+webapp.war file created is owned by dockeradmin. now this webap.war file we want to copy it on docker container. 
+we can copy it manually. but if we copy it manually and there are so many builds how you make sure that your 
+application is successfully deployed everytime. so we need to update our docker file to take this war file 
+while creating a new container. that is how we con deploy our application with tomcat.
 
 
 ========================================================================================================
@@ -431,7 +435,10 @@ webapp.war file created is owned by dockeradmin. now this webap.war file we want
 agenda : update tomcat dockerfile to automatic deployment process
 
 IN PREVIOS LECTURE WE HAVE CREATED A JENKINSFILE TO BUILD THE CODE AND DEPLOY THE THE ARTIFACTS INTO DOCKER HOST.
-NOW ITS TIME CRATE A DOCKER IMAGE ALONG WITH OUR ARTIFICATS MEANS WARFILE SO THAT WHENEVER WE LAUNCH A NEW CONTAINER, IT WILL COME WITH AN APLLICATION. FOR THAT ONE, WE NEED TO COPY THIS ARTIFACTS WHERE WE HAVE OUR DOCKERFILE. WE HAVE CREATED OUR DOCKERFILE UNDER ROOT DIRECTORY. INSTEAD OF THAT WE CAN MANINTAIN A SEPERATE DIRECTORY TO KEEP OUR DOCKERFILE AND THE ARTIFACTS, SO THAT IN FUTURE WE CAN USE OUR LOCATION TO CREATE OUR DOCKER IMAGES.
+NOW ITS TIME CREATE A DOCKER IMAGE ALONG WITH OUR ARTIFICATS MEANS WARFILE SO THAT WHENEVER WE LAUNCH A NEW CONTAINER, 
+IT WILL COME WITH AN APLLICATION. FOR THAT ONE, WE NEED TO COPY THIS ARTIFACTS WHERE WE HAVE OUR DOCKERFILE. WE HAVE 
+CREATED OUR DOCKERFILE UNDER ROOT DIRECTORY. INSTEAD OF THAT WE CAN MANINTAIN A SEPERATE DIRECTORY TO KEEP OUR 
+DOCKERFILE AND THE ARTIFACTS, SO THAT IN FUTURE WE CAN USE OUR LOCATION TO CREATE OUR DOCKER IMAGES.
 
 STEPS 
 
@@ -548,7 +555,7 @@ cmd : docker container prune
 
 - to delete all the images (unused)
 
-cmd: docker imgage prune -a
+cmd: docker image prune -a
 
 ----------------------------------------------------------
 
@@ -567,7 +574,7 @@ docker run -d --name registerapp -p 8087:8080 regapp:v1
 
 these two command manually on console
 
-it gives error that continer name already exists and so on ..... 
+it gives error that container name already exists and so on ..... 
 
 to overcome this we will see in next section.
 

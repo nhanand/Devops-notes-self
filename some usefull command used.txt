@@ -1,0 +1,29 @@
+service jenkins status/start/stop  
+
+service docker status/start/stop
+
+
+docker images
+docker ps    // tell how many containers are running
+docker ps -a // how many containers you are having
+
+docker run -d --name tomcat-container -p 8081:8080 tomcat
+===================================================================
+
+docker exec -it tomcat-container /bin/bash   //from docker host
+                                            // jump into docker container with that command
+root@c451b7a8ce9c:/usr/local/tomcat#   
+=================================================================================================
+docker stop tomcat-container
+
+docker build -t mytomcat .
+
+usermod -aG docker dockeradmin   // add a addition group docker for dockeradmin user
+
+chown dockeradmin:dockeradmin docker
+
+docker container prune
+
+docker image prune -a
+
+
