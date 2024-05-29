@@ -14,6 +14,7 @@ docker exec -it tomcat-container /bin/bash   //from docker host
                                             // jump into docker container with that command
 root@c451b7a8ce9c:/usr/local/tomcat#   
 =================================================================================================
+
 docker stop tomcat-container
 
 docker build -t mytomcat .
