@@ -17,7 +17,9 @@ root@c451b7a8ce9c:/usr/local/tomcat#
 
 docker stop tomcat-container
 
-docker build -t mytomcat .
+docker build -t mytomcat . // to build the image from dockerfile
+
+docker run -d --name tomcat-container2 -p 8081:8080 mytomcat
 
 usermod -aG docker dockeradmin   // add a addition group docker for dockeradmin user
 
@@ -26,5 +28,18 @@ chown dockeradmin:dockeradmin docker
 docker container prune
 
 docker image prune -a
+
+========================================================
+plugins used to integrate with Jenkins
+
+GitHub - GitHub plugin
+maven - maven plugin
+tomcat - deploy to container plugin
+docker  "publish over ssh" plugin
+====================================================
+
+
+
+
 
 

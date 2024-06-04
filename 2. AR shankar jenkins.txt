@@ -2,6 +2,7 @@ devops notes
 ============
 
 https://www.shiksha.com/online-courses/articles/what-makes-simplilearn-a-good-platform/
+
 jenkins is a java based application.
 
 
@@ -11,6 +12,7 @@ git -  local version control system
 GitHub - distributed version control system
 Jenkins - continuation integration tool
 Maven - as a build tool
+
 Ansible - configuration management and deployment tool
 Docker - for containerization
 Kubernetes - as a containers management tool
@@ -18,8 +20,6 @@ Kubernetes - as a containers management tool
 setup all these environment on AWS
 
 =========================================================
-
-
 
 A key pair consists of a public key that AWS stores and a private key file that you store. 
 Together, they allow you two connect to your instances securely. For windows AMIs, the 
@@ -29,41 +29,17 @@ EC2 supports ED25519 and RSA key pairs types.
 
 ===============================================================================================================
 
-def : Jenkins is an open source automation tool written in Java that allows continuous integration and continuous 
-delivery of projects.
-
-------------------------------------------------------------------------------------------------------------
-
-JOB TYPES
-1. Freestyle build jobs.
-
-2. Pipeline 
-
-3. Multiconfiguration project 
-
-4. Folder 
-
-5. GitHub Organization 
-
-6. Multibranch Pipeline
-
-7. Maven 
-
---------------------------------------------------------
-
-
-===============================================================================================================
 
 2.10
 
-Set up Jenkins Server
+agenda : Set up Jenkins Server
 
 Setup Jenkins
 
 mobaxtrem
 -----------
 Download mobaxterm
-ec2-user     
+ec2-user   
 ip address - public
 pem file - key downloaded during Jenkins setup
 always root user
@@ -166,13 +142,12 @@ ll
 
 =================================================================================================
 
-=================================================================================================
-
 2.14 
 
 agenda : Integrating MAVEN to Jenkins
 
-https://maven.apache.org/install.html   // use this website for reference , however all these steps are covered in this tutorial too.
+https://maven.apache.org/install.html   // use this website for reference , however all these steps 
+                                           are covered in this tutorial too.
 
 - MAVEN HAS POM.XML WHICH MANAGES ALL DEPENDENCIES HENCE NO HEADACHE OF CONFIGURATION.
 -------------------------------------------------------------------------------------------
