@@ -1,0 +1,88 @@
+Jenkins config 
+
+create EC2 instance
+ go to download and choose redhat Linux
+ - install epel
+ -install java
+ -install Jenkins
+
+start Jenkins
+- service Jenkins start
+
+ui copy public ip from Jenkins server and paste on web with port no
+
+extract Jenkins password
+cat ----
+
+login to Jenkins
+
+Jenkins job
+
+-new items
+-build - shell - echo hello world 
+-build first job
+
+hit build now
+
+==========================================
+
+install git on console 
+add plugin GitHub
+
+job pull code from GitHub
+ 
+- new items 
+- add Git
+- add path for GitHub
+save 
+
+hit build now
+
+=====================================
+
+maven setup
+
+go to /opt 
+download package wget maven //tar.gz
+unzip tarzip file
+mv maven 3.9.6 maven
+
+cd /opt/maven 
+mvn -v 
+
+to set path globally
+
+cd ~
+
+vi .bash_profile
+m2 /opt/maven/bin
+m2_home /opt/maven
+java_home add java path
+
+$path update
+
+save
+
+source bash_profile
+
+mvn -v anywhere
+
+maven job to build and generate artifact
+
+-new item
+-description
+-git 
+-GitHub path
+-maven goal clean install 
+save 
+
+hit build now
+
+===================================================
+
+tomcat 
+
+
+
+
+
