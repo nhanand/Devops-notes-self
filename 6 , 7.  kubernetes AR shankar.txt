@@ -1,0 +1,347 @@
+why Kubernetes?
+
+suppose docker container goes down , then there is no way to recover.
+Hence we need to use service like Docker swarm or Kubernetes. but Kubernetes 
+has more adv than docker swarm. hence it is used.
+======================================================================
+
+deploy our container as pod in k8s env.
+
+6.44 - Kubernetes installation methods
+
+eksctl is utility which helps us to setup our env. on amazon EKS.
+
+can be setup 
+
+using 
+
+1. kops
+2. kubeadm
+3. eksctl
+
+=======================================================================
+
+6.45
+
+EKS installation procedure 
+
+can be setup through amazon eks but using command line it is simple. so we
+are going to use this.
+
+ref : https://github.com/yankils/Simple-DevOps-Project/blob/master/Kubernetes/kubernetes_setup_using_eksctl.md
+
+
+============================================================================================
+
+6.46 
+
+Agenda - setup bootstrap server for eksctl
+
+step 1
+
+create EC2 instance using t2.micro - no need to create extra port as it is running on port no 22.
+
+step 2
+
+a. login in to terminal using public ip address and ec2-user. become root and check aws --version
+
+b. update the aws-cli to the latest as mentioned in documentation.
+
+step 3
+
+setup kubectl
+
+a. Download kubectl version 1.21
+b. Grant execution permissions to kubectl executable
+c. Move kubectl onto /usr/local/bin
+d. Test that your kubectl installation was successful
+
+curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.21.2/2021-07-05/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+mv ./kubectl /usr/local/bin 
+kubectl version --short --client
+
+step 4
+
+Setup eksctl
+
+a. Download and extract the latest release
+b. Move the extracted binary to /usr/local/bin
+c. Test that your eksclt installation was successful
+
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+sudo mv /tmp/eksctl /usr/local/bin
+eksctl version
+
+
+step 5
+
+Create an IAM Role and attache it to EC2 instance
+
+Note: create IAM user with programmatic access if your bootstrap system is outside of AWS
+IAM user should have access to
+IAM
+EC2
+CloudFormation
+Note: Check eksctl documentaiton for Minimum IAM policies
+
+==================================================================================================
+
+
+6.47 
+
+setup our cluster
+
+Create your cluster and nodes
+
+eksctl create cluster --name cluster-name  \
+--region region-name \
+--node-type instance-type \
+--nodes-min 2 \
+--nodes-max 2 \ 
+--zones <AZ-1>,<AZ-2>
+
+example:
+eksctl create cluster --name valaxy-cluster \
+   --region ap-south-1 \
+--node-type t2.small \
+
+stack i.e is cluster will can be seen on cloud formation.
+------------------------------------------------------------------
+
+kubectl get nodes // ho many nodes
+
+kubectl get all // all resources
+ 
+kubectl run webapp --image=httpd   // to create the pod 
+
+kubectl get pod // to see the pod
+
+eksctl delete cluster valaxy --region ap-south-1      // delete cluster
+
+
+==================================================================
+
+6.48 
+
+Deploying Nginx pods on Kubernetes
+
+create deployment -> will relicasets(in backend) -> this replicaset will create pod -> to access these pod we,
+need to create a service by expose command. this will create a service in backend and through this we can the
+pod. (this service type is a load balancer hence we can see a load balncer on aws cloud.
+
+                   ----------------------------------------------------
+                   - deployment --> replicaset --> pods <---- service -
+                   ----------------------------------------------------
+
+
+Deploying Nginx Container
+
+kubectl create deployment  demo-nginx --image=nginx --replicas=2 --port=80
+
+note- ngnix image is on dockerhub from where we are pulling
+
+kubectl get deployment // to check out deployment
+kubectl get replicaset // to see the replicaset created by deployment in backend
+kubectl get pod
+kubectl get all   // to see all the resources @ one go
+
+-----------------------------------------------------------------------------------------
+
+Expose the deployment as service on external n/w. This will create an ELB in front of those 2 containers and 
+allow us to publicly access them.
+
+kubectl expose deployment demo-nginx --port=80 --type=LoadBalancer
+kubectl get services -o wide
+
+----------------------------------------------------------------------------
+
+copy the loadbancer and paste it on ui to see your application running
+
+nginx default page will be shown
+
+# kubectl expose deployment regapp --port=8080 --type=LoadBalancer
+loadbalancer:8080
+
+
+======================================================================================
+
+6.49 
+
+agenda : to create manifest file for pod
+
+kubectl delete deployment demo-nginx   // to delete the deployment
+kubectl delete deployment service/demo-nginx
+
+ref : https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/  
+
+vi pod.yml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod             // name of the pod
+  labels:
+    app: demo-app
+
+spec:
+  containers:
+  - name: nginx-container      // what containers we are using
+    image: nginx
+    ports:
+    - name: nginx 
+      containerPort: 80
+
+:wq
+
+cat pod.yml
+
+kubectl apply -f pod.yml   // create a pod
+
+==================================================================================
+6.50
+
+agenda : to create manifest file for service
+
+vi service.yml
+
+apiVersion: v1 
+kind: Service
+metadata:
+  name: demo-service
+
+spec:
+  ports: 
+  - name: demo-service 
+    port: 80
+    targetPort: 80
+  
+  selector: 
+    app: demo-app
+
+  type: LoadBalancer 
+
+:wq
+
+kubectl apply -f service.yml   // create a service
+
+===========================================================
+
+6.51
+
+signification fof labels
+
+kubectl describe service/demoservice  // to see the changes updated or not
+
+kubectl get pod -o wide  
+
+===========================================================================
+
+7.52
+
+explanation how to write a deployment file  and service for pod
+
+kubectl delete demo-pod
+
+if we delete our pod then there is no way to recover hence we use deployments
+
+kubectl delete service demo-service
+
+--------------------------------------------------------------------------------
+
+sample deployment for understanding
+
+refer : regapp-deploy.yml
+
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: valaxy-regapp
+  labels: 
+     app: regapp
+
+spec:
+  replicas: 2 
+  selector:
+    matchLabels:
+      app: regapp
+
+  template:
+    metadata:
+      labels:
+        app: regapp
+    spec:
+      containers:
+      - name: regapp
+        image: valaxy/regapp
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+
+kubectl apply -f regapp-deploy.yml
+
+-------------------------------------------
+
+required a service file for this
+
+refer : regapp-service.yml
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: valaxy-service
+  labels:
+    app: regapp 
+spec:
+  selector:
+    app: regapp 
+
+  ports:
+    - port: 8080
+      targetPort: 8080
+
+  type: LoadBalancer
+
+kubectl apply -f regapp-service.yml
+
+go to cluser - description - dns - copy link - paste on ui with port no link:8080/webapps 
+
+=====================================================================================
+
+7.53 
+
+integrate Kubernetes with ansible
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

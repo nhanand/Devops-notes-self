@@ -1,0 +1,27 @@
+1. Build and Deploy on Tomcat Server
+
+steps
+
+➢ Setup CI/CD with GitHub, Jenkins, Maven and Tomcat
+▪ Setup Jenkins
+▪ Setup & configure Maven and Git
+▪ Setup Tomcat Server
+▪ Integrating GitHub, Maven, Tomcat Server with Jenkins
+▪ Create a CI and CD job
+▪ Test the deployment
+
+---------------------------------------------------------
+
+2. Deploy Artifacts on a Container
+
+steps
+
+➢ Setup CI/CD with GitHub, Jenkins, Maven and Docker
+▪ Setting up Docker environment
+▪ Write Dockerfile
+▪ Create an image and container on docker host
+▪ Integrate docker host with Jenkins
+▪ Create CI/CD job on Jenkins to build and deploy on a container 
+
+=======================================================================
+

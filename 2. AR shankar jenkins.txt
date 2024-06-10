@@ -44,8 +44,11 @@ ip address - public
 pem file - key downloaded during Jenkins setup
 always root user
 
+
 java and Jenkins setup 
 ----------------------
+create ec2 instances first
+
 
 Go to Jenkins download and deploy
 Choose redhat/cent os              // package
@@ -126,8 +129,8 @@ Jenkins job to pull the code from GitHub
 New item
 Job name
 Description
-Git
-Path code http https://github.com/nhanand/hello-world.git
+select Git
+add Path code http https://github.com/nhanand/hello-world.git
 Apply and save
 -------------------------------------------------------------
 
@@ -141,6 +144,8 @@ plz note: whenever Jenkins do any build activity it will do in workspace.
 ll
 
 =================================================================================================
+
+                        MAVEN SETUP AND bUILD
 
 2.14 
 
@@ -185,7 +190,7 @@ vi .bash_profile // edit               // for use only for root user bash_pofile
 
 M2_HOME=/opt/maven   // where maven is stored
 M2=/opt/maven/bin    // binary directory
-M2_HOME=/usr/lib/jvm/java-11-openjdk-11.0.22.0.7-1.amzn2.0.1.x86_64   //find / -name java-11*(or jvm)
+M2_HOME=/usr/lib/jvm/java-11-openjdk-11.0.22.0.7-1.amzn2.0.1.x86_64   //find / -name java-11*
                                                                         /usr/lib/jvm/java-11-openjdk-11.0.22.0.7-1.amzn2.0.1.x86_64
                                                                         - it is the path where jdk is available
 
@@ -197,7 +202,7 @@ PATH=$PATH:$HOME/bin:$JAVA_HOME:$M2_HOME:$M2   // $ is given to take the path as
 
 echo $PATH   // it will not loaded , we need to restart or run the below command
 
- source .bash_profile  
+ source .bash_profile  // source is going to read the file again and load the path
  
 echo $PATH  // now it will give the path
 
@@ -213,12 +218,33 @@ manage Jenkins/manage plugin/available search maven integration and integrate
 now we again config our Jenkins
 manage/tools/add java path and add maven 
 
+for jdk 
+name java-11
+java_hime = /usr/lib/jvm/java-11-openjdk-11.0.22.0.7-1.amzn2.0.1.x86_64
+
+for maven
+name maven 3.9.6
+maven_home = /opt/maven
+
+
+
 
 ==================================================================
 
 2.15
 
 agenda : build a java project using Jenkins
+
+new item 
+choose maven project
+ok
+description
+git
+path
+maven goals clean install 
+save
+
+hit build now
 
 refer it for maven goals (like clean install etc)
 
