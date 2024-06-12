@@ -56,7 +56,7 @@ Follow instruction and install java and Jenkins  (use video link udemy)
 
 amazon-linux-extras install epel    //(extra packages for enterprise Linux) if it is not install , then we are unable to install Jenkins
 
-amazon-linux-extras install-java-openjdk11  // install java
+** vvi ** yum install java-17 (need to install java 17 in place 11 becoz using java 11 maven is not able to build)
 java -version
 -------------------------------------------------------------------------------------------------
 
@@ -190,9 +190,10 @@ vi .bash_profile // edit               // for use only for root user bash_pofile
 
 M2_HOME=/opt/maven   // where maven is stored
 M2=/opt/maven/bin    // binary directory
-M2_HOME=/usr/lib/jvm/java-11-openjdk-11.0.22.0.7-1.amzn2.0.1.x86_64   //find / -name java-11*
-                                                                        /usr/lib/jvm/java-11-openjdk-11.0.22.0.7-1.amzn2.0.1.x86_64
+JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto.x86_64:/opt/maven:/opt/maven/bin   //find / -name java-17*
+                                                                        /usr/lib/jvm/java-17-amazon-corretto.x86_64:/opt/maven:/opt/maven/bin
                                                                         - it is the path where jdk is available
+
 
 
 PATH=$PATH:$HOME/bin:$JAVA_HOME:$M2_HOME:$M2   // $ is given to take the path as defined above

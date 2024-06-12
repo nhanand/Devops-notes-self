@@ -10,7 +10,7 @@ Jenkins config
 create EC2 instance
  go to Jenkins download and choose redhat Linux follow instrutions
  - install epel
- -install java
+ -install java-17
  -install Jenkins
 
 start Jenkins
@@ -56,22 +56,22 @@ unzip tar.gz file
 mv maven 3.9.6 maven
 
 cd /opt/maven 
-mvn -v 
+./mvn -v 
 
 to set path globally
 
 cd ~
 
 vi .bash_profile
-m2 /opt/maven/bin
-m2_home /opt/maven
-java_home add java path
+M2 /opt/maven/bin
+M2_HOME /opt/maven
+JAVA_HOME add java path
 
 $path update
 
 save
 
-source bash_profile  
+source .bash_profile  
 
 echo $path
 
@@ -89,7 +89,7 @@ manage/tools/add java path and add maven
 
 for jdk 
 name java-11
-java_hime = /usr/lib/jvm/java-11-openjdk-11.0.22.0.7-1.amzn2.0.1.x86_64
+java_home = /usr/lib/jvm/java-17-amazon-corretto.x86_64
 
 for maven
 name maven 3.9.6
@@ -114,9 +114,12 @@ hit build now
 
 ===================================================
 
-                 docker
+                DOCKER 
 
-- ec2 instance
+- ec2 instance 
+
+ SETUP tomcat container - for hosting application
+
 - install docker 
 cd  yum install docker -y
 -> service docker status/start/stop
@@ -160,6 +163,78 @@ escape
 
 - cmd : docker build -t demotomcat .   // to build image
 - docker run -d --name demotomcat-container -p 8082:8080 demotomcat    //creating demotomcat-container  for demotomcat image 
+
+-------------------------------------------------------------------------------------------
+
+  INTEGRATE DOCKERHOST TO JENKINS
+
+- cat /etc/passwd // to see the user
+- cat /etc/group  // to se the group
+
+- create a user as admin and add him to docker group to perform aall the activites
+
+ ->useradd dockeradmin
+ ->passwd dockeradmin
+ ->new password docker123
+
+-add user to docker group
+-> usermod -aG docker dockeradmin   
+
+ec2 instance does not allow password based authentication , we have to explicityly enable it
+
+cmd -> vi /etc/ssh/sshd_config
+
+->PasswordAuthentication yes    //enable it like this
+->#PasswordAuthentication no    // disable it like this
+
+save
+
+- service sshd reload
+
+- open duplicate session using dockeradmin and password
+
+- install publish over ssh plugin 
+-> path manage Jenkins/ plugins / available / publish over ssh  
+
+- configure our docker-host in Jenkins
+-> manage Jenkins / systems / go below to Publish over SSH / add ssh servers 
+   (because we are using password based authentication)
+  add
+  -> name - hostname(docker-host)
+  -> hostname - private ip address of docker-host
+  -> username - dockeradmin
+  -> password - docker123 (under advance)
+  -> test/apply and save
+
+integration completed 
+
+------------------------------------------------------------------
+
+        JENKINS JOB TO BUILD THE CODE AND COPY THE ARTIFACTS ON DOCKERHOST
+
+- once it is done then copying it to our container is easy.
+
+- new item -> build_deploy_job -> maven -> ok
+- description - git - GitHub path - pol scm - goals (clean install) ->
+  post build action -> add post build action -> 
+  choose Send build artifacts over SSH 
+  - name autofilled 
+  - source -> webapp/target/*.war
+  - Remove prefix -> webapp/target
+  
+save 
+
+build now
+ 
+-------------------------------------------------------------------------
+
+
+
+
+
+
+
+
 
 
 
