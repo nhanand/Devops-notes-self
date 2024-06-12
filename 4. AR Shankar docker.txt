@@ -319,7 +319,7 @@ step 4
 
 to create container for the above image
 
-docker run -d --name demotomcat-container -p 8085:8081 demotomcat    //creating demotomcat-container  for demotomcat image 
+docker run -d --name demotomcat-container -p 8085:8080 demotomcat    //creating demotomcat-container  for demotomcat image 
 
 docker ps // to validate
 ---------------------------------------------------------------------------------------
