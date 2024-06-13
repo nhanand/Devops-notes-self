@@ -145,7 +145,7 @@ ll
 
 =================================================================================================
 
-                        MAVEN SETUP AND bUILD
+                        MAVEN SETUP AND BUILD
 
 2.14 
 
@@ -190,8 +190,8 @@ vi .bash_profile // edit               // for use only for root user bash_pofile
 
 M2_HOME=/opt/maven   // where maven is stored
 M2=/opt/maven/bin    // binary directory
-JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto.x86_64:/opt/maven:/opt/maven/bin   //find / -name java-17*
-                                                                        /usr/lib/jvm/java-17-amazon-corretto.x86_64:/opt/maven:/opt/maven/bin
+JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto.x86_64   //find / -name java-17*
+                                                                        /usr/lib/jvm/java-17-amazon-corretto.x86_64
                                                                         - it is the path where jdk is available
 
 
@@ -220,15 +220,12 @@ now we again config our Jenkins
 manage/tools/add java path and add maven 
 
 for jdk 
-name java-11
-java_hime = /usr/lib/jvm/java-11-openjdk-11.0.22.0.7-1.amzn2.0.1.x86_64
+name java-17
+JAVA_HOME = /usr/lib/jvm/java-17-amazon-corretto.x86_64
 
 for maven
 name maven 3.9.6
 maven_home = /opt/maven
-
-
-
 
 ==================================================================
 
@@ -236,17 +233,17 @@ maven_home = /opt/maven
 
 agenda : build a java project using Jenkins
 
-new item 
-choose maven project
-ok
-description
-git
-path
-maven goals clean install 
-save
+maven job to build and generate artifact
+
+-new item
+-description
+-git 
+-GitHub path
+-maven goal clean install 
+save 
 
 hit build now
-
+----------------------------------------------------------------------------------
 refer it for maven goals (like clean install etc)
 
 https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html    
