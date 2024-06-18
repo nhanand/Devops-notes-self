@@ -186,7 +186,7 @@ steps
 cd ~ to go back to root directory 
 ll -a // to check the hidden files
 
-vi .bash_profile // edit               // for use only for root user bash_pofile is edited
+vi .bash_profile // edit               // for use only for root user bash_profile is edited
 
 M2_HOME=/opt/maven   // where maven is stored
 M2=/opt/maven/bin    // binary directory
