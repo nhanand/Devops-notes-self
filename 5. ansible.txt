@@ -1,0 +1,9 @@
+                                                          ANSIBLE
+                                                       =============
+
+- launch ec2 instance 
+ -> no need to open any other port as ansible run on port no 22.
+
+- login using mobaxterm 
+ -> same as Jenkins
+
