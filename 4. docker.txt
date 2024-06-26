@@ -12,6 +12,7 @@ to change the hostname
 vi /etc/hostname
 change name and save
 init 6 to reboot 
+retart
 =======================
 
                                     BASICS OF DOCKER
